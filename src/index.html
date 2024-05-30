@@ -3,7 +3,13 @@
 		<title>bluedec</title>
 	</head>
 	<script>
-		console.log("hello!");
+		let ws;
+		const proto = window.location.protocol === "https:" ? "wss" : "ws";
+		ws = new WebSocket(`${proto}://${window.location.host}`);
+
+		ws.addEventListener("message", (event) => {
+			console.log(event.data)
+		});
 	</script>
 
 	<body>
