@@ -8,7 +8,8 @@
 		ws = new WebSocket(`${proto}//${window.location.host}`);
 
 		ws.addEventListener("message", (event) => {
-			console.log(event.data)
+			console.log("Message received!");
+			console.log(event.data);
 		});
 	</script>
 
