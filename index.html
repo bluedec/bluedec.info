@@ -1,11 +1,11 @@
 <html>
 	<head>
-		<title>bluedec</title>
+		<title>yesusblog</title>
 	</head>
 	<script>
 		let ws;
-		const proto = window.location.protocol === "https:" ? "wss" : "ws";
-		ws = new WebSocket(`${proto}://${window.location.host}`);
+		const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+		ws = new WebSocket(`${proto}//${window.location.host}`);
 
 		ws.addEventListener("message", (event) => {
 			console.log(event.data)
@@ -14,7 +14,7 @@
 
 	<body>
 		<main>
-			<h1>bluedec.info</h1>
+			<h1>yesusblog</h1>
 			<h2>Websocket Example</h2>
 		</main>
 	</body>
