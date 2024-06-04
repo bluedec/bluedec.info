@@ -9,7 +9,7 @@ app.get('/', function(req, res) {
 
 server.on('request', app);
 
-server.listen(PORT, function () { console.log('Listening on ' + PORT); });
+server.listen(PORT, function () { console.log('# Listening on ' + PORT); });
 
 process.on("SIGINT", () => {
   console.log("Exiting...")
@@ -33,10 +33,13 @@ wss.on('connection', function connection(ws) {
 
   wss.broadcast(`Current visitors: ${numClients}`);
 
-  insertVisitor("jesus saez!", 15)
-  getCount();
-  getTableColumns("visitors");
+  //insertVisitor("jesus saez!", 15)
+  //getCount();
+  //getTableColumns("visitors");
 
+  addPlayer("Bluedec");
+  const players = getAllPlayers();
+  console.log(players);
 
   if (ws.readyState === ws.OPEN) {
     ws.send('welcome!');
@@ -66,9 +69,29 @@ wss.broadcast = function broadcast(data) {
 
 /** End Websocket **/
 
-const sqlite = require("sqlite3")
 
-const db = new sqlite.Database(":memory:");
+/** Database **/
+
+const sqlite = require("sqlite3")
+const db = new sqlite.Database(":memory:", () => console.log("# Created Database in memory."));
+
+const addPlayer = (name) => {
+  db.run(`
+    INSERT INTO players (name, health)
+    VALUES ("${name}", 100)
+  `);
+}
+
+const getAllPlayers = () => {
+  const players = [];
+  let idx = 0;
+  db.each('SELECT * FROM players', (err, row) => {
+    players.push(row);
+    console.log("# players -> ", players) 
+    idx++;
+  });
+  return players;
+}
 
 db.serialize(() => {
   console.log("Serializing");
@@ -78,7 +101,20 @@ db.serialize(() => {
       age NUMBER
     )
   `);
+  db.run(`
+    CREATE TABLE players (
+      name TEXT,
+      health NUMBER
+    )
+  `);
+  db.run(`
+    INSERT INTO players (name, health)
+    VALUES ("Jesus", 100)
+  `);
+  addPlayer("heloom");
+  getAllPlayers();
 });
+
 
 const insertVisitor = (name, age) => {
   db.run(`
@@ -106,6 +142,7 @@ const shutdownDatabase = () => {
 
 }
 
+/** Ends Database **/
 
 
 
